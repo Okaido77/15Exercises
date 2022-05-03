@@ -11,6 +11,6 @@ Bài 14: gần như xong, chưa chạy test
 Bài 15: main đang viết dở vì dài
 Bài 12: thiếu isempty exception ở vài chỗ + chưa test
 
-List bài chưa làm: 
-5,6,7,8
+các bài cùng dạng không thêm main
+5,6,7,8: done
 
