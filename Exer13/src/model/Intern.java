@@ -38,6 +38,15 @@ public class Intern extends Employee {
 
     @Override
     public void showInformation() {
-
+        System.out.println("Type Of Employee:" + super.getEmployee_type() + "\n" +
+                "ID='" + super.getID() + '\'' +
+                ", FullName='" + super.getFullName() + '\'' +
+                ", BirthDay=" + super.getBirthDay() +
+                ", Phone='" + super.getPhone() + '\'' +
+                ", Email='" + super.getEmail() + '\'' +
+                ", Majors='" + Majors + '\'' +
+                ", Semester='" + Semester + '\''+
+                ", University_name='" + University_name + '\''
+        );
     }
 }
