@@ -28,7 +28,7 @@ public class Experience extends Employee {
     }
 
     @Override
-    public void showMe() {
+    public void showInformation() {
 
     }
 }

@@ -15,7 +15,7 @@ public class Fresher extends Employee {
 
 
     @Override
-    public void showMe() {
+    public void showInformation() {
 
     }
 

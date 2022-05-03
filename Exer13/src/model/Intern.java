@@ -37,7 +37,7 @@ public class Intern extends Employee {
     }
 
     @Override
-    public void showMe() {
+    public void showInformation() {
 
     }
 }
