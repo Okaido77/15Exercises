@@ -4,9 +4,9 @@ import java.util.List;
 
 public class Faculty {
     private String facultyName;
-    private List<StudentStandardModel> studentList;
+    private List<Student> studentList;
 
-    public Faculty(String facultyName, List<StudentStandardModel> studentList) {
+    public Faculty(String facultyName, List<Student> studentList) {
         this.facultyName = facultyName;
         this.studentList = studentList;
     }
@@ -22,11 +22,11 @@ public class Faculty {
         this.facultyName = facultyName;
     }
 
-    public List<StudentStandardModel> getSubjectList() {
+    public List<Student> getStudentList() {
         return studentList;
     }
 
-    public void setSubjectList(List<StudentStandardModel> studentList) {
+    public void setSubjectList(List<Student> studentList) {
         this.studentList = studentList;
     }
 }

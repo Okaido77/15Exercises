@@ -1,9 +1,7 @@
 package model;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 public class Semester {
     private String name;
@@ -14,6 +12,10 @@ public class Semester {
     public Semester(String name, List<Course> courseList) {
         this.name = name;
         this.courseList = courseList;
+    }
+
+    public Semester(String name) {
+        this.name = name;
     }
 
     public Semester(String name, double averageScore) {

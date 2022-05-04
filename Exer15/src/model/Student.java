@@ -1,14 +1,12 @@
 package model;
 
-import Service.StudentService;
-
 import java.util.*;
 
-public abstract class StudentStandardModel {
+public abstract class Student {
     private String id;
     private String name;
     private Date dateOfBirth;
-    private Date startYear;
+    private int startYear;
     // điểm đầu vào
     private double entryPoint;
     private String faculty;
@@ -18,7 +16,7 @@ public abstract class StudentStandardModel {
 
 
 
-    public StudentStandardModel(String id, String name, Date dateOfBirth, Date startYear, double entryPoint, List<Semester> semesters,String faculty) {
+    public Student(String id, String name, Date dateOfBirth, int startYear, double entryPoint, List<Semester> semesters, String faculty) {
         this.id = id;
         this.name = name;
         this.dateOfBirth = dateOfBirth;
@@ -28,14 +26,14 @@ public abstract class StudentStandardModel {
         this.faculty = faculty;
     }
 
-    public StudentStandardModel() {
+    public Student() {
     }
     //copy constuctor
-    public StudentStandardModel(StudentStandardModel student) {
+    public Student(Student student) {
         this.id = student.getId();
         this.name = student.getName();
         this.dateOfBirth = new Date(student.getDateOfBirth().getTime()) ;
-        this.startYear = new Date(student.getStartYear().getTime());
+        this.startYear = student.getStartYear();
         this.entryPoint = new Double(student.getEntryPoint());
         this.semesters = new LinkedList<>(student.semesters) ;
         this.faculty = student.getFaculty();
@@ -74,11 +72,11 @@ public abstract class StudentStandardModel {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public Date getStartYear() {
+    public int getStartYear() {
         return startYear;
     }
 
-    public void setStartYear(Date startYear) {
+    public void setStartYear(int startYear) {
         this.startYear = startYear;
     }
 
@@ -109,6 +107,18 @@ public abstract class StudentStandardModel {
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Student)) return false;
+        Student student = (Student) o;
+        return getStartYear() == student.getStartYear() && Double.compare(student.getEntryPoint(), getEntryPoint()) == 0 && getId().equals(student.getId()) && Objects.equals(getName(), student.getName()) && Objects.equals(getDateOfBirth(), student.getDateOfBirth()) && Objects.equals(getFaculty(), student.getFaculty());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getName(), getDateOfBirth(), getStartYear(), getEntryPoint(), getFaculty());
+    }
 
     public abstract void ShowInfo();
 
