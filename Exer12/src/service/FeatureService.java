@@ -70,8 +70,10 @@ public class FeatureService {
         } catch (Exception e) {
             throw new Exception("công suất nhập vào không chính xác");
         }
-        System.out.println("Thêm Thông tin của xe máy" + pt.getID() + "vào thành công");
-        qlpt.themPhuongTien(new XeMay(pt.getID(), pt.getHangSX(), pt.getNamSX(), pt.getGiaBan(), pt.getColor(), congSuat));
+
+        if (qlpt.themPhuongTien(new XeMay(pt.getID(), pt.getHangSX(), pt.getNamSX(), pt.getGiaBan(), pt.getColor(), congSuat)))
+            System.out.println("Thêm Thông tin của xe máy" + pt.getID() + "vào thành công");
+        else System.out.println("Thêm Thông tin của xe máy" + pt.getID() + "vào thất bại do trùng id");
 
     }
 
@@ -86,8 +88,9 @@ public class FeatureService {
         } catch (Exception e) {
             throw new Exception("Thông tin trọng tải nhập vào không chính xác");
         }
-        System.out.println("Thêm Thông tin của xe tải" + pt.getID() + "vào thành công");
-        qlpt.themPhuongTien(new XeTai(pt.getID(), pt.getHangSX(), pt.getNamSX(), pt.getGiaBan(), pt.getColor(), trongTai));
+        if (qlpt.themPhuongTien(new XeTai(pt.getID(), pt.getHangSX(), pt.getNamSX(), pt.getGiaBan(), pt.getColor(), trongTai)))
+            System.out.println("Thêm Thông tin của xe tải" + pt.getID() + "vào thành công");
+        else System.out.println("Thêm Thông tin của xe tải" + pt.getID() + "vào thất bại do trùng id");
 
 
     }
@@ -106,8 +109,11 @@ public class FeatureService {
         }
         System.out.println("Nhập động cơ của xe ô tô:");
         dongCo = sc.nextLine().trim();
-        System.out.println("Thêm Thông tin của xe tải" + pt.getID() + "vào thành công");
-        qlpt.themPhuongTien(new Oto(pt.getID(), pt.getHangSX(), pt.getNamSX(), pt.getGiaBan(), pt.getColor(), soChoNgoi, dongCo));
+        if (qlpt.themPhuongTien(new Oto(pt.getID(), pt.getHangSX(), pt.getNamSX(), pt.getGiaBan(), pt.getColor(), soChoNgoi, dongCo)))
+            System.out.println("Thêm Thông tin của xe ô tô" + pt.getID() + "vào thành công");
+        else
+            System.out.println("Thêm Thông tin của xe ô tô" + pt.getID() + "vào thất bại do trùng id");
+
     }
 
     public void timKiemThongTin() throws Exception {

@@ -56,7 +56,7 @@ public class main {
                         throw new Exception("không có lựa chọn này");
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                System.out.println(e.getMessage());
             }
         }
 
