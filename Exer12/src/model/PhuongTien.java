@@ -64,12 +64,13 @@ public abstract class PhuongTien {
         if (this == o) return true;
         if (!(o instanceof PhuongTien)) return false;
         PhuongTien that = (PhuongTien) o;
-        return getGiaBan() == that.getGiaBan() && getID().equals(that.getID()) && getHangSX().equals(that.getHangSX()) && getNamSX().equals(that.getNamSX()) && getColor().equals(that.getColor());
+        return Objects.equals(getID(), that.getID());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getID(), getHangSX(), getNamSX(), getGiaBan(), getColor());
+        return Objects.hash(getID());
     }
+
     public abstract void ShowInfo();
 }
