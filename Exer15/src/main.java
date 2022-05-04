@@ -1,8 +1,9 @@
 import Service.ViewService;
-import Service.StudentService;
+import Service.FeatureContainer;
 import Service.UniversityManager;
 import model.*;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
@@ -20,15 +21,12 @@ public class main {
         List<Faculty> fs = new LinkedList<>();
         fs.add(new Faculty("Software Engineering", new LinkedList<>()));
         fs.add(new Faculty("International Bussiness", new LinkedList<>()));
-
-        University uni = new University("fpt", fs);
-        UniversityManager um = new UniversityManager(uni);
-
+        List<Semester> sl = Arrays.asList(new Semester("kì 1"),new Semester("Kì 2"));
+        List<Student> stl = new LinkedList<>();
+        University uni = new University("fpt",stl, fs,sl);
         Scanner sc = new Scanner(System.in);
-        StudentService ss = new StudentService();
-        String input;
-        String facultyName;
-        String choice, choice2, choice3;
+        FeatureContainer fc = new FeatureContainer(uni);
+        String choice, choice2;
 
         while (true) {
             ViewService.viewAllLines("University Manager System: ",
@@ -41,27 +39,9 @@ public class main {
             try {
                 switch (choice) {
                     case "1":
-                        ViewService.viewAllLines("choose type of student",
-                                "1.Regular Student",
-                                "2.In-service Student");
-                        input = sc.nextLine().trim();
-                        switch (input) {
-                            case "1":
-                                RegularStudent rs = ss.takeRegularStudent(uni);
-                                um.addStudent(rs);
-                                break;
-                            case "2":
-                                In_serviceStudent is = ss.takeIn_serviceStudent(uni);
-                                um.addStudent(is);
-                                break;
-                            default:
-                                throw new Exception("Invalid Choice");
-                        }
+                        fc.addAStudent();
                         break;
-
-
                     case "2":
-
                         ViewService.viewAllLines("Statics:",
                                 "1.Xác định tổng số 2 loại sinh viên của các khoa",//7
                                 "2.Tìm ra sinh viên có điểm đầu vào cao nhất ở mỗi khoa",//8
@@ -75,80 +55,43 @@ public class main {
                         choice2 = sc.nextLine().trim();
                         switch (choice2) {
                             case "1":
-                                printFaculty(fs);
-                                choice3 = sc.nextLine().trim();
-                                if (!choice3.equals("a"))
-                                    try {
-                                        Faculty fa = fs.get(Integer.parseInt(choice3) - 1);
-                                        System.out.println("Faculty:" + fa.getFacultyName());
-                                        long numberOfISS = um.countStudentByType("In_serviceStudent", fa.getFacultyName());
-                                        System.out.println("Number Of In-Service Student: " + numberOfISS);
-                                        long numberOfRS = um.countStudentByType("Regular Student", fa.getFacultyName());
-                                        System.out.println("Number Of Regular Student: " + numberOfRS);
-                                    } catch (Exception e) {
-                                        throw new Exception("incorrect choice", e);
-                                    }
-                                else {
-                                    for (Faculty fa : fs) {
-                                        System.out.println("Faculty:" + fa.getFacultyName());
-                                        long numberOfISS = um.countStudentByType("In_serviceStudent", fa.getFacultyName());
-                                        System.out.println("Number Of In-Service Student: " + numberOfISS);
-                                        long numberOfRS = um.countStudentByType("Regular Student", fa.getFacultyName());
-                                        System.out.println("Number Of Regular Student: " + numberOfRS);
-                                        System.out.println("");
-                                    }
-                                }
+                                System.out.println("tổng số 2 loại sinh viên của các khoa:");
+                                fc.total2TypeStudent();
                                 break;
                             case "2":
-                                for(Faculty fa : fs){
-                                    List<StudentStandardModel> s = um.HighestEntryPointStudent(fa.getFacultyName());
-                                    for(StudentStandardModel ssm : s){
-                                        ssm.ShowInfo();
-                                    }
-                                }
-                            break;
+                                System.out.println("sinh viên có điểm đầu vào cao nhất ở mỗi khoa:");
+                                fc.highestEntryStudents();
+                                break;
                             case "3":
-
-                                String trainingCoopPlace = sc.nextLine().trim();
-                                printFaculty(fs);
-                                choice3 = sc.nextLine().trim();
-                                if (!choice3.equals("a"))
-                                    try {
-                                        Faculty fa = fs.get(Integer.parseInt(choice3) - 1);
-                                        System.out.println("Faculty:" + fa.getFacultyName());
-                                        List<In_serviceStudent> isl = um.getIn_serviceStudentAt(fa, trainingCoopPlace);
-                                        isl.forEach(
-                                                i -> i.ShowInfo()
-                                        );
-                                    } catch (Exception e) {
-                                        throw new Exception("incorrect choice", e);
-                                    }
-                                else {
-                                    for (Faculty fa : fs) {
-                                        System.out.println("Faculty:" + fa.getFacultyName());
-                                        List<In_serviceStudent> isl = um.getIn_serviceStudentAt(fa, trainingCoopPlace);
-                                        isl.forEach(
-                                                i -> i.ShowInfo()
-                                        );
-                                    }
-                                }
+                                System.out.println("danh sách các sinh viên tại chức tại nơi liên kết đào tạo cho trước:");
+                                fc.listInServiceStudentAt();
                                 break;
                             case "4":
-
-                                printFaculty(fs);
+                                System.out.println("danh sách sinh viên có điểm trung bình ở học kỳ gần nhất từ 8.0 trở lên:");
+                                fc.request_4();
                                 break;
                             case "5":
-                                printFaculty(fs);
+                                System.out.println("sinh viên có điểm trung bình học kỳ cao nhất (ở bất kỳ học kỳ nào) theo khoa");
+                                fc.request_5();
                                 break;
                             case "6":
-                                printFaculty(fs);
+                                System.out.println("sắp xếp danh sách sinh viên tăng dần theo loại và giảm dần theo năm vào học:");
+                                fc.request_6();
                                 break;
                             case "7":
+                                System.out.println("thống kê số lượng sinh viên theo năm vào học theo khoa:");
+                                fc.request_7();
+                                break;
+                            case "8":
                                 break;
                             default:
                                 throw new Exception("Invalid Choice");
                         }
+
                         break;
+                    case"3":
+                        System.out.println("good bye");
+                        return;
                     default:
                         throw new Exception("Invalid Choice");
 

@@ -3,7 +3,7 @@ package model;
 import java.util.Date;
 import java.util.List;
 
-public class In_serviceStudent extends StudentStandardModel {
+public class In_serviceStudent extends Student {
     private String trainingCoopPlace;
 
     public String getTrainingCoopPlace() {
@@ -14,7 +14,7 @@ public class In_serviceStudent extends StudentStandardModel {
         this.trainingCoopPlace = trainingCoopPlace;
     }
 
-    public In_serviceStudent(String id, String name, Date dateOfBirth, Date startYear, double entryPoint, List<Semester> avgScoreOfSemesters, String department, String trainingCoopPlace) {
+    public In_serviceStudent(String id, String name, Date dateOfBirth, int startYear, double entryPoint, List<Semester> avgScoreOfSemesters, String department, String trainingCoopPlace) {
         super(id, name, dateOfBirth, startYear, entryPoint, avgScoreOfSemesters, department);
         this.trainingCoopPlace = trainingCoopPlace;
     }
@@ -45,18 +45,21 @@ public class In_serviceStudent extends StudentStandardModel {
                         ", startYear=" + super.getStartYear() +
                         ", entryPoint=" + super.getEntryPoint() +
                         ", trainingPlace='" + trainingCoopPlace + '\'');
-
-        System.out.println("List of semester: ");
-        super.getSemesters().forEach(
-                s -> {
-                    try {
-                        System.out.println("Name:" + s.getName() + "avg:" + s.getAverageScore());
-                    } catch (Exception e) {
-                        System.out.println("Warning:");
-                        System.out.println(e.getMessage());
+        if (super.getSemesters() != null) {
+            System.out.println("List of semester: ");
+            super.getSemesters().forEach(
+                    s -> {
+                        try {
+                            System.out.println("Name:" + s.getName() + "avg:" + s.getAverageScore());
+                        } catch (Exception e) {
+                            System.out.println("Warning:");
+                            System.out.println(e.getMessage());
+                        }
                     }
-                }
-        );
+            );
+        } else {
+            System.out.println("Sinh viên này chưa nhập thông tin các học kì");
+        }
     }
 
 

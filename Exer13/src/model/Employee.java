@@ -2,6 +2,7 @@ package model;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 public abstract class Employee {
 
@@ -88,5 +89,21 @@ public abstract class Employee {
         this.certificates = certificates;
     }
 
-    public abstract void showMe();
+    // không thể có 2 employee cùng 1 phone và email
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Employee)) return false;
+        Employee employee = (Employee) o;
+        return getID().equals(employee.getID()) && Objects.equals(getPhone(), employee.getPhone()) && Objects.equals(getEmail(), employee.getEmail());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getID(), getPhone(), getEmail());
+    }
+
+    public abstract void showInformation();
 }
