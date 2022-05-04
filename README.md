@@ -3,12 +3,12 @@
 Tình trạng các bài:
 Bài 1,2,3,4 : đã tối ưu các method, chưa tối ưu mảng kiểm tra để throw exception
 
-Bài 13: chưa có main
+Bài 13: done
 Bài 9 done;
 Bài 10 done;
 Bài 11 done;
-Bài 14: gần như xong, chưa chạy test
-Bài 15: main đang viết dở vì dài
+Bài 14: done
+Bài 15: chưa test hết statistic
 Bài 12: thiếu isempty exception ở vài chỗ + chưa test
 
 các bài cùng dạng không thêm main
