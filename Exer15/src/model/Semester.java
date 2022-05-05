@@ -8,27 +8,33 @@ public class Semester {
     //courseName + grade
     private List<Course> courseList;
     private double averageScore;
+    private int startYear;
 
-    public Semester(String name, List<Course> courseList) {
+    public Semester(String name, int startYear) {
         this.name = name;
-        this.courseList = courseList;
+        this.startYear = startYear;
     }
+
+
 
     public Semester(String name) {
         this.name = name;
     }
 
-    public Semester(String name, double averageScore) {
-        this.name = name;
-        this.averageScore = averageScore;
-    }
-
-    public Semester() {
-    }
 
     public Semester(Semester semester) {
         this.name = semester.getName();
-        this.courseList = new LinkedList<>(courseList);
+        this.courseList = new LinkedList<>();
+        this.startYear = semester.getStartYear();
+
+    }
+
+    public int getStartYear() {
+        return startYear;
+    }
+
+    public void setStartYear(int startYear) {
+        this.startYear = startYear;
     }
 
     public String getName() {

@@ -1,5 +1,5 @@
 import Service.CandidateManager;
-import Service.GeneralFeatureContainer;
+import Service.FeatureContainer;
 import model.GoodStudent;
 import model.NormalStudent;
 import model.Student;
@@ -11,7 +11,7 @@ import java.util.Scanner;
 public class main {
     public static void main(String[] args) {
         CandidateManager cm = new CandidateManager(new LinkedList<>());
-        GeneralFeatureContainer gfc = new GeneralFeatureContainer();
+        FeatureContainer gfc = new FeatureContainer();
         Scanner sc = new Scanner(System.in);
         List<Student> candidateList = new LinkedList<>();
         String input;

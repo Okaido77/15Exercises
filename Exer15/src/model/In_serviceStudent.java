@@ -45,7 +45,7 @@ public class In_serviceStudent extends Student {
                         ", startYear=" + super.getStartYear() +
                         ", entryPoint=" + super.getEntryPoint() +
                         ", trainingPlace='" + trainingCoopPlace + '\'');
-        if (super.getSemesters() != null) {
+        if (super.getSemesters() != null&&super.getSemesters().size()!=0) {
             System.out.println("List of semester: ");
             super.getSemesters().forEach(
                     s -> {

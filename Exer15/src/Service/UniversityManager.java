@@ -82,21 +82,14 @@ public class UniversityManager {
         return sl.stream().filter(s -> s.getName().contains(name)).collect(Collectors.toList());
     }
 
-    //6
-    public double semesterGradeOfAStudent(String id, int semesterIndex) throws Exception {
-        Student s = searchAStudentByID(id);
-        List<Semester> sl = s.getSemesters();
-        if(sl == null) return 0;
-        sl.get(semesterIndex).calculateAverageScore();
-        return s.getSemesters().get(semesterIndex).getAverageScore();
-    }
 
     //
     //7
     public long countStudentByType(String type, String faculty) {
-        List<Student> sl = uni.getStudents();
+        Faculty fa = findFaculty(faculty);
+        List<Student> sl = fa.getStudentList();
         if (sl == null) return 0;
-        long count = uni.getStudents().stream().filter(s -> checkTypeOfStudent(type, s)).count();
+        long count = sl.stream().filter(s -> checkTypeOfStudent(type, s)).count();
         return count;
 
     }
@@ -116,7 +109,7 @@ public class UniversityManager {
     public List<Student> HighestEntryPointStudent(String fa) {
         Faculty f = findFaculty(fa);
         if (f == null) return null;
-        List<Student> sl = uni.getStudents();
+        List<Student> sl = f.getStudentList();
         if(sl==null) return null;
         double maxGrade = -1;
         for (Student s : sl) {
@@ -138,7 +131,8 @@ public class UniversityManager {
     //9
     public List<In_serviceStudent> getIn_serviceStudentAt(Faculty fa, String trainingCoopPlace) {
         List<In_serviceStudent> l = new LinkedList<>();
-        for (Student s : uni.getStudents()) {
+
+        for (Student s : fa.getStudentList()) {
             if (s.getClass().getSimpleName().equals("In_serviceStudent")) {
                 In_serviceStudent is = (In_serviceStudent) s;
                 if (((In_serviceStudent) s).getTrainingCoopPlace().equals(trainingCoopPlace))
@@ -150,63 +144,48 @@ public class UniversityManager {
 
     //
     //11
-    public List<Student> getHighestAvgGradeStudent(Faculty fa, int semesterIndex) {
-        TreeMap<Double, Student> sl = new TreeMap();
+    public List<Student> getHighestAvgGradeStudent(Faculty fa, Semester semester) throws Exception {
 
-        Student student;
-        for (Student s : fa.getStudentList()) {
-            student = s;
-            double grade;
+        List<Student> sl = fa.getStudentList();
+        double maxGrade = -1;
+        for (Student s : sl) {
+            Semester semester1 = getTargetedSemester(s,semester);
+            if(semester1==null) continue;
+            semester1.calculateAverageScore();
+            double currentGrade = semester1.getAverageScore();
+            if ( currentGrade > maxGrade)
+                maxGrade = currentGrade;
+        }
+        final double maxGradeF = maxGrade;
+        return sl.stream().filter(s->{
             try {
-                //calculate to ensure this grade presents
-                List<Semester> sel = s.getSemesters();
-                sel.get(semesterIndex).calculateAverageScore();
-                grade = s.getSemesters().get(semesterIndex).getAverageScore();
+                return getTargetedSemester(s,semester).getAverageScore()==maxGradeF;
             } catch (Exception e) {
-                // error detail: missing grade of some courses
-                grade = 0;
+                return false;
             }
-        }
-        double highestGrade;
-        try {
-            highestGrade = sl.lastKey();
-        } catch (Exception e) {
-            highestGrade = 0;
-        }
-        List<Student> hl = new LinkedList<>();
-        for (Map.Entry<Double, Student> st : sl.entrySet()) {
-            if (st.getKey() == highestGrade) hl.add(st.getValue());
-        }
 
-        return hl;
+        }).collect(Collectors.toList());
     }
 
     ;
     //
 
     //10
-    public List<Student> findStudentsHigherThan(Faculty fa, int semesterIndex, double gradeBase) {
-        Map<Double, Student> sl = new HashMap<>();
-
-        Student student;
-        for (Student s : fa.getStudentList()) {
-            student = s;
-            double grade;
+    public List<Student> findStudentsHigherThan(Faculty fa, Semester semester, double gradeBase) {
+        List<Student> sl = fa.getStudentList().stream().filter(s -> {
+            double grade = 0;
             try {
                 //calculate to ensure this grade presents
-                s.getSemesters().get(semesterIndex).calculateAverageScore();
-                grade = s.getSemesters().get(semesterIndex).getAverageScore();
+                Semester semester1 = getTargetedSemester(s,semester);
+                semester1.calculateAverageScore();
+                grade = semester1.getAverageScore();
             } catch (Exception e) {
                 // error detail: missing grade of some courses
                 grade = 0;
             }
-        }
-        List<Student> hl = new LinkedList<>();
-        for (Map.Entry<Double, Student> st : sl.entrySet()) {
-            if (st.getKey() >= gradeBase) hl.add(st.getValue());
-        }
-
-        return hl;
+            return grade >= gradeBase;
+        }).collect(Collectors.toList());
+        return sl;
     }
 
     ;
@@ -247,5 +226,11 @@ public class UniversityManager {
         return slc;
     }
     //
+    public Semester getTargetedSemester(Student student,Semester semester){
+
+        Optional<Semester> semester1 = student.getSemesters().stream().filter(s -> s.getName().equals(semester.getName())).findFirst();
+        if(semester1.isPresent()) return semester1.get();
+        return null;
+    }
 
 }

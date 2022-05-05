@@ -112,12 +112,12 @@ public abstract class Student {
         if (this == o) return true;
         if (!(o instanceof Student)) return false;
         Student student = (Student) o;
-        return getStartYear() == student.getStartYear() && Double.compare(student.getEntryPoint(), getEntryPoint()) == 0 && getId().equals(student.getId()) && Objects.equals(getName(), student.getName()) && Objects.equals(getDateOfBirth(), student.getDateOfBirth()) && Objects.equals(getFaculty(), student.getFaculty());
+        return Objects.equals(getId(), student.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getName(), getDateOfBirth(), getStartYear(), getEntryPoint(), getFaculty());
+        return Objects.hash(getId());
     }
 
     public abstract void ShowInfo();

@@ -26,19 +26,22 @@ public class FeatureContainer {
                 "1.Regular Student",
                 "2.In-service Student");
         input = sc.nextLine().trim();
+        boolean isSuccess = false;
         switch (input) {
             case "1":
                 RegularStudent rs = takeRegularStudent();
-                um.addStudent(rs);
+                isSuccess = um.addStudent(rs);
                 break;
             case "2":
                 In_serviceStudent is = takeIn_serviceStudent();
-                um.addStudent(is);
+                isSuccess = um.addStudent(is);
                 break;
             default:
                 throw new Exception("Invalid Choice");
         }
-        System.out.println("Add student successfully");
+        if (isSuccess) System.out.println("Add student successfully");
+        else
+            System.out.println("Fail to add because this id is duplicated");
     }
 
     private RegularStudent takeRegularStudent() throws Exception {
@@ -124,24 +127,30 @@ public class FeatureContainer {
         } catch (NumberFormatException ex) {
             throw new Exception("Incorrect choice format", ex);
         }
+        // kiểm tra trong đối tượng có danh sách các kì chưa
 
+        List<Semester> bsl = um.getUni().getSemesters();
+        List<Semester> semesterList = new LinkedList<>();
+        for (Semester s : bsl) {
+            int gap = s.getStartYear() - startYear;
+            if (gap <= 7 && gap >= 0)// chỉ add các kì học trong vòng 7 năm từ khi vào trường
+                semesterList.add(new Semester(s));
+        }
         // student without semester
-        Student ssm = new Student(id, name, dateOfBirth, startYear, entryPoint, null, faculty) {
+        Student ssm = new Student(id, name, dateOfBirth, startYear, entryPoint, semesterList, faculty) {
             @Override
             public void ShowInfo() {
             }
         };
 
         //add semester into student
-        System.out.println("Add Some Semesters?:\n" +
-                "1.Yes\n" +
-                "2.No\n");
+        System.out.println("Add Some Semesters?(y/n)");
         String choice = sc.nextLine().trim();
         switch (choice) {
-            case "1":
+            case "y":
                 ssm = addSemester(ssm);
                 break;
-            case "2":
+            case "n":
                 return ssm;
             default:
                 throw new Exception("invalid choice");
@@ -153,10 +162,12 @@ public class FeatureContainer {
     private Student addSemester(Student ssm) throws Exception {
         String input;
         List<Semester> semesterList;
-        // kiểm tra trong đối tượng có danh sách các kì chưa
-        if (ssm.getSemesters() == null)
-            semesterList = new LinkedList<>(um.getUni().getSemesters());
-        else semesterList = ssm.getSemesters();
+        semesterList = ssm.getSemesters();
+        if (semesterList.size() == 0) {
+            System.out.println("Sinh viên không có học kì do năm nhập học chênh với các kì khả dụng hơn 7 năm\n" +
+                    "hoặc kì học tiếp theo chưa có");
+            return ssm;
+        }
         double grade;
         for (Semester s : semesterList) {
             System.out.println("semester :" + s.getName());
@@ -165,8 +176,8 @@ public class FeatureContainer {
             switch (input) {
                 case "y":
                     s = addCourse(s);
-                    System.out.println("Auto calculate average score successfully!");
                     s.calculateAverageScore();
+                    System.out.println("Auto calculate average score successfully!");
                     break;
                 case "n":
                     System.out.println("enter avg grade of semester");
@@ -196,7 +207,7 @@ public class FeatureContainer {
             if (courseName.isEmpty()) throw new Exception("course name is empty ");
             final String courseNameFinal = courseName;
             List<Course> cl = semester.getCourseList();
-            if(cl==null) {
+            if (cl == null) {
                 cl = new LinkedList<>();
                 semester.setCourseList(cl);
             }
@@ -249,7 +260,7 @@ public class FeatureContainer {
 
                 long numberOfISS = um.countStudentByType("In_serviceStudent", fa.getFacultyName());
                 System.out.println("Number Of In-Service Student: " + numberOfISS);
-                long numberOfRS = um.countStudentByType("Regular Student", fa.getFacultyName());
+                long numberOfRS = um.countStudentByType("RegularStudent", fa.getFacultyName());
                 System.out.println("Number Of Regular Student: " + numberOfRS);
 
             } catch (Exception e) {
@@ -260,7 +271,7 @@ public class FeatureContainer {
                 System.out.println("Faculty:" + fa.getFacultyName());
                 long numberOfISS = um.countStudentByType("In_serviceStudent", fa.getFacultyName());
                 System.out.println("Number Of In-Service Student: " + numberOfISS);
-                long numberOfRS = um.countStudentByType("Regular Student", fa.getFacultyName());
+                long numberOfRS = um.countStudentByType("RegularStudent", fa.getFacultyName());
                 System.out.println("Number Of Regular Student: " + numberOfRS);
             }
         }
@@ -268,7 +279,9 @@ public class FeatureContainer {
 
     public void highestEntryStudents() {
         for (Faculty fa : fl) {
+            System.out.println("Faculty(Khoa) " + fa.getFacultyName() + ":");
             List<Student> s = um.HighestEntryPointStudent(fa.getFacultyName());
+            if (s == null || s.size() == 0) System.out.println("No Data");
             for (Student ssm : s) {
                 ssm.ShowInfo();
             }
@@ -281,50 +294,55 @@ public class FeatureContainer {
         printFaculty(fl);
 
         String choice = sc.nextLine().trim();
+        List<In_serviceStudent> isl;
         if (!choice.equals("a"))
             try {
                 Faculty fa = fl.get(Integer.parseInt(choice) - 1);
                 System.out.println("Faculty:" + fa.getFacultyName());
-                List<In_serviceStudent> isl = um.getIn_serviceStudentAt(fa, trainingCoopPlace);
+                isl = um.getIn_serviceStudentAt(fa, trainingCoopPlace);
                 isl.forEach(
                         i -> i.ShowInfo()
                 );
+                if (isl == null || isl.size() == 0) System.out.println("No Data");
             } catch (Exception e) {
                 throw new Exception(e.getMessage());
             }
         else {
             for (Faculty fa : fl) {
                 System.out.println("Faculty:" + fa.getFacultyName());
-                List<In_serviceStudent> isl = um.getIn_serviceStudentAt(fa, trainingCoopPlace);
+                isl = um.getIn_serviceStudentAt(fa, trainingCoopPlace);
                 isl.forEach(
                         i -> i.ShowInfo()
                 );
+                if (isl == null || isl.size() == 0) System.out.println("No Data");
             }
         }
+
     }
 
     //danh sách sinh viên có điểm trung bình ở học kỳ gần nhất từ 8.0 trở lên
     public void request_4() throws Exception {
         printFaculty(fl);
         String faIndex = sc.nextLine().trim();
-        if (!faIndex.equals("a"))
-            try {
-                Faculty fa = fl.get(Integer.parseInt(faIndex) - 1);
-                System.out.println("Faculty:" + fa.getFacultyName());
-                List<Student> l = um.findStudentsHigherThan(fa, fl.size() - 1, 8);
-                for (Student s : l) {
-                    s.ShowInfo();
-                }
-            } catch (Exception e) {
-                throw new Exception(e.getMessage());
+        List<Student> l;
+        Semester lastSemester = um.getUni().getSemesters().get(um.getUni().getSemesters().size() - 1);
+        if (!faIndex.equals("a")) {
+            Faculty fa = fl.get(Integer.parseInt(faIndex) - 1);
+            System.out.println("Faculty:" + fa.getFacultyName());
+            l = um.findStudentsHigherThan(fa, lastSemester, 8);
+            for (Student s : l) {
+                s.ShowInfo();
             }
-        else {
+            if (l == null || l.size() == 0) System.out.println("No Data");
+
+        } else {
             for (Faculty fa : fl) {
                 System.out.println("Faculty:" + fa.getFacultyName());
-                List<Student> l = um.findStudentsHigherThan(fa, fl.size() - 1, 8);
+                l = um.findStudentsHigherThan(fa, lastSemester, 8);
                 for (Student s : l) {
                     s.ShowInfo();
                 }
+                if (l == null || l.size() == 0) System.out.println("No Data");
             }
         }
     }
@@ -333,38 +351,32 @@ public class FeatureContainer {
     public void request_5() throws Exception {
         printFaculty(fl);
         String faIndex = sc.nextLine().trim();// faculty index
-        int index = chooseSemester();
-        if (!faIndex.equals("a"))
-            try {
-                Faculty fa = fl.get(Integer.parseInt(faIndex) - 1);
-                System.out.println("Faculty:" + fa.getFacultyName());
-                List<Student> l;
-
-                l = um.getHighestAvgGradeStudent(fa, index);
-                if (l == null) {
-                    System.out.println("No Data");
-                    return;
-
-                }
+        Semester semester = chooseSemester();
+        List<Student> l;
+        if (!faIndex.equals("a")) {
+            Faculty fa = fl.get(Integer.parseInt(faIndex) - 1);
+            System.out.println("Faculty:" + fa.getFacultyName());
+            l = um.getHighestAvgGradeStudent(fa, semester);
+            if (l == null || l.size() == 0) System.out.println("No Data");
+            else
                 for (Student s : l) {
                     s.ShowInfo();
                 }
-            } catch (Exception e) {
-                throw new Exception(e.getMessage());
-            }
-        else {
+        } else {
             for (Faculty fa : fl) {
                 System.out.println("Faculty:" + fa.getFacultyName());
-                List<Student> l = um.getHighestAvgGradeStudent(fa, index);
-                for (Student s : l) {
-                    s.ShowInfo();
-                }
+                l = um.getHighestAvgGradeStudent(fa, semester);
+                if (l == null || l.size() == 0) System.out.println("No Data");
+                else
+                    for (Student s : l) {
+                        s.ShowInfo();
+                    }
             }
         }
     }
 
     // return index
-    private int chooseSemester() throws Exception {
+    private Semester chooseSemester() throws Exception {
         System.out.println("choose semester: ");
         List<Semester> sl = um.getUni().getSemesters();
         for (int i = 0; i < sl.size(); i++) {
@@ -376,30 +388,30 @@ public class FeatureContainer {
         } catch (Exception ex) {
             throw new Exception("invalid Choice");
         }
-        return index;
+        return sl.get(index);
     }
 
     public void request_6() throws Exception {
         printFaculty(fl);
         String faIndex = sc.nextLine().trim();// faculty index
-        if (!faIndex.equals("a"))
-            try {
-                Faculty fa = fl.get(Integer.parseInt(faIndex) - 1);
-                System.out.println("Faculty:" + fa.getFacultyName());
-                List<Student> l = um.sortByTypeAndYear(fa);
+        if (!faIndex.equals("a")) {
+            Faculty fa = fl.get(Integer.parseInt(faIndex) - 1);
+            System.out.println("Faculty:" + fa.getFacultyName());
+            List<Student> l = um.sortByTypeAndYear(fa);
+            if (l == null || l.size() == 0) System.out.println("No data");
+            else
                 for (Student s : l) {
                     s.ShowInfo();
                 }
-            } catch (Exception e) {
-                throw new Exception(e.getMessage());
-            }
-        else {
+        } else {
             for (Faculty fa : fl) {
                 System.out.println("Faculty:" + fa.getFacultyName());
                 List<Student> l = um.sortByTypeAndYear(fa);
-                for (Student s : l) {
-                    s.ShowInfo();
-                }
+                if (l == null || l.size() == 0) System.out.println("No data");
+                else
+                    for (Student s : l) {
+                        s.ShowInfo();
+                    }
             }
         }
     }
@@ -407,24 +419,24 @@ public class FeatureContainer {
     public void request_7() throws Exception {
         printFaculty(fl);
         String faIndex = sc.nextLine().trim();// faculty index
-        if (!faIndex.equals("a"))
-            try {
-                Faculty fa = fl.get(Integer.parseInt(faIndex) - 1);
-                System.out.println("Faculty:" + fa.getFacultyName());
-                Map<Integer, List<Student>> m = um.countStudentByYear(fa);
+        if (!faIndex.equals("a")) {
+            Faculty fa = fl.get(Integer.parseInt(faIndex) - 1);
+            System.out.println("Faculty:" + fa.getFacultyName());
+            Map<Integer, List<Student>> m = um.countStudentByYear(fa);
+            if (m == null || m.size() == 0) System.out.println("No data");
+            else
                 for (Map.Entry e : m.entrySet()) {
                     System.out.println("năm:" + e.getKey() + "có: " + ((List<Student>) e.getValue()).size() + " học sinh vào khoa");
                 }
-            } catch (Exception e) {
-                throw new Exception(e.getMessage());
-            }
-        else {
+        } else {
             for (Faculty fa : fl) {
                 System.out.println("Faculty:" + fa.getFacultyName());
                 Map<Integer, List<Student>> m = um.countStudentByYear(fa);
-                for (Map.Entry e : m.entrySet()) {
-                    System.out.println("năm:" + e.getKey() + "có: " + ((List<Student>) e.getValue()).size() + " học sinh vào khoa");
-                }
+                if (m == null || m.size() == 0) System.out.println("No data");
+                else
+                    for (Map.Entry e : m.entrySet()) {
+                        System.out.println("năm:" + e.getKey() + "có: " + ((List<Student>) e.getValue()).size() + " học sinh vào khoa");
+                    }
             }
         }
 

@@ -21,7 +21,7 @@ public class main {
         List<Faculty> fs = new LinkedList<>();
         fs.add(new Faculty("Software Engineering", new LinkedList<>()));
         fs.add(new Faculty("International Bussiness", new LinkedList<>()));
-        List<Semester> sl = Arrays.asList(new Semester("kì 1"),new Semester("Kì 2"));
+        List<Semester> sl = Arrays.asList(new Semester("kì 1 2019",2019),new Semester("Kì 2 2020",2020));
         List<Student> stl = new LinkedList<>();
         University uni = new University("fpt",stl, fs,sl);
         Scanner sc = new Scanner(System.in);
@@ -98,7 +98,8 @@ public class main {
                 }
             } catch (Exception ex) {
                 System.out.println("Error:");
-                System.out.println(ex.getMessage());
+//                System.out.println(ex.getMessage());
+                ex.printStackTrace();
             }
 
         }
