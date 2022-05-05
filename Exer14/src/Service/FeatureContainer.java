@@ -39,7 +39,7 @@ public class FeatureContainer {
         String phoneNumber;
         System.out.println("enter fullName");
         fullName = sc.nextLine().trim();
-        if (fullName.isEmpty()) throw new InvalidFullNameException();
+        fullName = StudentValidation.toName(fullName);
         System.out.println("enter dob(dd/MM/yyyy)");
         input = sc.nextLine().trim();
         dob = StudentValidation.toBirthDay(input);
@@ -62,8 +62,10 @@ public class FeatureContainer {
 
         return new Student(fullName, dob, sex, universityName, gradeLevel, phoneNumber) {
             @Override
-            public void ShowInformation() {
+            public void ShowMyInfor() {
+
             }
+
         };
     }
 

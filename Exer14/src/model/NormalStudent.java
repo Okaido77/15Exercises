@@ -1,13 +1,15 @@
 package model;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 public class NormalStudent extends Student {
     private int englishScore;
     private int entryTestScore;
 
-    public NormalStudent(String fullName, LocalDate dob, boolean sex, String universityName, String gradeLevel, String phoneNumber, int englishScore, int entryTestScore) {
+    public NormalStudent(String fullName, Date dob, boolean sex, String universityName, String gradeLevel, String phoneNumber, int englishScore, int entryTestScore) {
         super(fullName, dob, sex, universityName, gradeLevel, phoneNumber);
         this.englishScore = englishScore;
         this.entryTestScore = entryTestScore;
@@ -47,7 +49,7 @@ public class NormalStudent extends Student {
                 "University Name: " + super.getUniversityName() + "\n" +
                 "Phone Number: " + super.getPhoneNumber() + "\n" +
                 "Grade Level: " + super.getGradeLevel() + "\n" +
-                "Date Of Birth: "+super.formatter.format(super.getDob())+"\n"+
+                "Date Of Birth: "+new SimpleDateFormat("dd/MM/yyyy").format(super.getDob())+"\n"+
                 "Gender: "+(super.getSex()==true?"Male":"Female")+"\n"+
                 "English score: "+englishScore+"\n"+
                 "Entry Test Point: "+entryTestScore

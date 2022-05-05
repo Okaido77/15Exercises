@@ -1,6 +1,9 @@
 package validation;
 
 import relatedException.studentException.InvalidDOBException;
+import relatedException.studentException.InvalidFullNameException;
+import relatedException.studentException.InvalidPhoneNumberException;
+import relatedException.studentException.InvalidSexException;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -21,26 +24,25 @@ public class StudentValidation {
         }
         return birthDay;
     }
-    public static int toStartYear(String startYear) throws InvalidStartYearException {
-        if (startYear.isEmpty()) throw new InvalidStartYearException("startYear is empty");
-        int year ;
-        Date date ;
-        DateFormat df = new SimpleDateFormat("yyyy");
-        LocalDate now = LocalDate.now();
-        try {
-            date = df.parse(startYear);
-            LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            year = localDate.getYear();
-        } catch (Exception ex) {
-            throw new InvalidStartYearException("incorrect startYear format", ex);
-        }
-        if(year>now.getYear()) throw new InvalidStartYearException("startYear cant higher than current year");
-        return year;
+    public static String toPhone(String phoneNumber) throws InvalidPhoneNumberException {
+        if (phoneNumber.isEmpty()) throw new InvalidPhoneNumberException("startYear is empty");
+        phoneNumber = phoneNumber.replaceAll("\\s+","");
+        if(phoneNumber.length()!=10) throw new InvalidPhoneNumberException("length of phone must equal 10");
+        if(!" 090 098 091 031 035 038".contains(phoneNumber.substring(0,2)))
+            throw new InvalidPhoneNumberException("phải bắt đầu bằng một trong các chuỗi số: 090, 098, 091, 031, 035 hoặc 038");
+
+        return phoneNumber;
     }
 
-
-    public static String toName(String name) throws InvalidNameException {
-        if (name.isEmpty()) throw new InvalidNameException("name is empty");
+    public static boolean toGender(String gender) throws InvalidSexException {
+        boolean sex ;
+        if(gender.equals("1")||gender.equals("2"))
+            sex = "1".equals(gender);
+        else throw new InvalidSexException("Invalid input(just 1 or 2 allowed)");
+        return sex;
+    }
+    public static String toName(String name) throws InvalidFullNameException {
+        if (name.isEmpty()) throw new InvalidFullNameException("name is empty");
         // chuẩn hóa tên
         String[] parts = name.trim().split("\\s+");
         StringBuffer nameS = new StringBuffer();

@@ -1,12 +1,14 @@
 package model;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Date;
 
 public class GoodStudent extends Student{
     private double gpa;
     private String bestRewardName;
 
-    public GoodStudent(String fullName, LocalDate dob, boolean sex, String universityName, String gradeLevel, String phoneNumber, double gpa, String bestRewardName) {
+    public GoodStudent(String fullName, Date dob, boolean sex, String universityName, String gradeLevel, String phoneNumber, double gpa, String bestRewardName) {
         super(fullName, dob, sex, universityName, gradeLevel, phoneNumber);
         this.gpa = gpa;
         this.bestRewardName = bestRewardName;
@@ -39,7 +41,7 @@ public class GoodStudent extends Student{
                 "University Name: " + super.getUniversityName() + "\n" +
                 "Phone Number: " + super.getPhoneNumber() + "\n" +
                 "Grade Level: " + super.getGradeLevel() + "\n" +
-                "Date Of Birth: "+super.formatter.format(super.getDob())+"\n"+
+                "Date Of Birth: "+new SimpleDateFormat("dd/MM/yyyy").format(super.getDob())+"\n"+
                 "Gender: "+(super.getSex()==true?"Male":"Female")+"\n"+
                 "gpa: "+gpa+"\n"+
                 "best Reward Name: "+bestRewardName

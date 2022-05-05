@@ -6,12 +6,12 @@ import java.util.Date;
 
 public abstract class Student {
     private String fullName;
-    private LocalDate dob;
+    private Date dob;
     private boolean sex;
     private String universityName;
     private String gradeLevel;//
     private String phoneNumber;
-    public Student(String fullName, LocalDate dob, boolean sex, String universityName, String gradeLevel,String phoneNumber) {
+    public Student(String fullName, Date dob, boolean sex, String universityName, String gradeLevel,String phoneNumber) {
         this.fullName = fullName;
         this.dob = dob;
         this.sex = sex;
@@ -35,11 +35,11 @@ public abstract class Student {
         this.fullName = fullName;
     }
 
-    public LocalDate getDob() {
+    public Date getDob() {
         return dob;
     }
 
-    public void setDob(LocalDate dob) {
+    public void setDob(Date dob) {
         this.dob = dob;
     }
 
