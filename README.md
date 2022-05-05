@@ -9,7 +9,7 @@ Bài 10 done;
 Bài 11 done;
 Bài 14: done
 Bài 15: chưa test hết statistic
-Bài 12: thiếu isempty exception ở vài chỗ + chưa test
+Bài 12: done
 
 các bài cùng dạng không thêm main
 5,6,7,8: done
